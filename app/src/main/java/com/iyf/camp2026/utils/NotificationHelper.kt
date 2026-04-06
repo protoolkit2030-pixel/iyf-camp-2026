@@ -15,7 +15,7 @@ import com.iyf.camp2026.R
 import java.util.Calendar
 
 object NotificationHelper {
-    private const val CHANNEL_ID = "iyf_camp_channel"
+    internal const val CHANNEL_ID = "iyf_camp_channel"
     private const val CHANNEL_NAME = "Camp IYF 2026"
     private const val CHANNEL_DESCRIPTION = "Notifications du Camp d'Étude et de Formation IYF 2026"
 
