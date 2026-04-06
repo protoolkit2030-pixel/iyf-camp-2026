@@ -27,6 +27,12 @@ jobs:
         with:
           gradle-version: '8.6'
 
+      - name: 🔑 Restore credentials Google Sheets
+        run: |
+          mkdir -p app/src/main/assets
+          echo "${{ secrets.GOOGLE_CREDENTIALS_JSON }}" | base64 --decode > app/src/main/assets/credentials.json
+          echo "✅ credentials.json restauré ($(wc -c < app/src/main/assets/credentials.json) octets)"
+
       - name: 🔤 Download Poppins fonts
         run: |
           FONT_DIR="app/src/main/res/font"
@@ -87,6 +93,12 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.6'
+
+      - name: 🔑 Restore credentials Google Sheets
+        run: |
+          mkdir -p app/src/main/assets
+          echo "${{ secrets.GOOGLE_CREDENTIALS_JSON }}" | base64 --decode > app/src/main/assets/credentials.json
+          echo "✅ credentials.json restauré ($(wc -c < app/src/main/assets/credentials.json) octets)"
 
       - name: 🔤 Download Poppins fonts
         run: |
