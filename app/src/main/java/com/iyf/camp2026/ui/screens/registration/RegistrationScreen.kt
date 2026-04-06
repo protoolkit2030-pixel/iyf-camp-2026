@@ -599,27 +599,43 @@ fun IYFDateField(
     onClick: () -> Unit
 ) {
     Column(modifier = Modifier.padding(vertical = 6.dp)) {
-        OutlinedTextField(
-            value = value,
-            onValueChange = {},
-            label = { Text(label, style = MaterialTheme.typography.labelMedium) },
-            leadingIcon = { Icon(Icons.Default.CalendarMonth, null, tint = if (error != null) ErrorRed else OrangeIYF) },
-            trailingIcon = { Icon(Icons.Default.KeyboardArrowDown, null, tint = MediumGray) },
-            readOnly = true,
-            isError = error != null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onClick() },
-            shape = RoundedCornerShape(12.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = OrangeIYF,
-                unfocusedBorderColor = LightGray,
-                errorBorderColor = ErrorRed,
-                unfocusedContainerColor = White,
-                focusedContainerColor = White
-            ),
-            placeholder = { Text("JJ/MM/AAAA", style = MaterialTheme.typography.bodySmall, color = MediumGray) }
-        )
+        // Box wrapper : la couche transparente cliquable par-dessus le TextField
+        // corrige le bug où OutlinedTextField consomme le clic avant clickable()
+        Box(modifier = Modifier.fillMaxWidth()) {
+            OutlinedTextField(
+                value = value,
+                onValueChange = {},
+                label = { Text(label, style = MaterialTheme.typography.labelMedium) },
+                leadingIcon = { Icon(Icons.Default.CalendarMonth, null, tint = if (error != null) ErrorRed else OrangeIYF) },
+                trailingIcon = { Icon(Icons.Default.KeyboardArrowDown, null, tint = MediumGray) },
+                readOnly = true,
+                enabled = false,
+                isError = error != null,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    // Couleurs "disabled" calquées sur le look normal pour garder l'apparence
+                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                    disabledBorderColor = if (error != null) ErrorRed else LightGray,
+                    disabledLeadingIconColor = if (error != null) ErrorRed else OrangeIYF,
+                    disabledTrailingIconColor = MediumGray,
+                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    disabledPlaceholderColor = MediumGray,
+                    disabledContainerColor = White,
+                    focusedBorderColor = OrangeIYF,
+                    unfocusedBorderColor = LightGray,
+                    errorBorderColor = ErrorRed,
+                    unfocusedContainerColor = White,
+                    focusedContainerColor = White,
+                ),
+                placeholder = { Text("JJ/MM/AAAA", style = MaterialTheme.typography.bodySmall, color = MediumGray) }
+            )
+            // Couche transparente qui intercepte le clic et ouvre le calendrier
+            Box(modifier = Modifier
+                .matchParentSize()
+                .clickable { onClick() }
+            )
+        }
         error?.let { ErrorText(it) }
     }
 }
