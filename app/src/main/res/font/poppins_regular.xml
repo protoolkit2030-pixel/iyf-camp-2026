@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  IMPORTANT: Téléchargez les fichiers de police Poppins depuis Google Fonts:
+  https://fonts.google.com/specimen/Poppins
+
+  Placez ces fichiers dans ce dossier (app/src/main/res/font/) :
+  - poppins_regular.ttf
+  - poppins_medium.ttf
+  - poppins_semibold.ttf
+  - poppins_bold.ttf
+
+  Supprimez ce fichier XML après avoir ajouté les fichiers .ttf
+-->
+<font-family xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:fontProviderAuthority="com.google.android.gms.fonts"
+    app:fontProviderPackage="com.google.android.gms"
+    app:fontProviderQuery="Poppins"
+    app:fontProviderCerts="@array/com_google_android_gms_fonts_certs">
+</font-family>

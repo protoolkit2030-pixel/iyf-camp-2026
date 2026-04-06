@@ -1,0 +1,27 @@
+# Android
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+
+# APK/AAB
+*.apk
+*.aab
+
+# Keystore
+*.jks
+*.keystore
+
+# Secrets - DO NOT COMMIT
+app/src/main/assets/credentials.json
+local.properties
+
+# Gradle
+**/.gradle/
+**/build/
+gradle-wrapper.jar

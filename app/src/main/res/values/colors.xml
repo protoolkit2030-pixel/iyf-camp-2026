@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="orange_iyf">#FF6600</color>
+    <color name="orange_dark">#CC5200</color>
+    <color name="orange_light">#FF8533</color>
+    <color name="green_dark">#1B4332</color>
+    <color name="green_medium">#2D6A4F</color>
+    <color name="blue_iyf">#0046A0</color>
+    <color name="white">#FFFFFF</color>
+    <color name="off_white">#F8F9FA</color>
+    <color name="light_gray">#E9ECEF</color>
+    <color name="dark_gray">#343A40</color>
+    <color name="success_green">#28A745</color>
+    <color name="error_red">#DC3545</color>
+    <color name="black">#1A1A1A</color>
+</resources>

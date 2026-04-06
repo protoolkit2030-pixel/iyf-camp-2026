@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">IYF Camp 2026 - Inscription</string>
+    <string name="app_name_full">IYF Camp d\'Étude et de Formation 2026</string>
+    <string name="camp_title">Camp d\'Étude et de Formation</string>
+    <string name="camp_subtitle">Le secret de LA RÉUSSITE dans les études</string>
+    <string name="camp_dates">08 au 10 Avril 2026</string>
+    <string name="camp_location">Cours Secondaire Méthodiste (CSM) Niangon</string>
+    <string name="camp_price">5 000 FCFA</string>
+    <string name="iyf_full_name">International Youth Fellowship</string>
+
+    <!-- Contacts -->
+    <string name="contact_1">+225 07 59 87 21 26</string>
+    <string name="contact_2">+225 07 49 54 56 06</string>
+    <string name="contact_3">+225 05 65 65 44 70</string>
+
+    <!-- Buttons -->
+    <string name="btn_register">S\'INSCRIRE MAINTENANT</string>
+    <string name="btn_my_registrations">MES INSCRIPTIONS</string>
+    <string name="btn_download_receipt">TÉLÉCHARGER LE REÇU PDF</string>
+    <string name="btn_share_receipt">PARTAGER LE REÇU</string>
+    <string name="btn_back_home">RETOUR À L\'ACCUEIL</string>
+    <string name="btn_continue">CONTINUER</string>
+    <string name="btn_confirm">CONFIRMER L\'INSCRIPTION</string>
+
+    <!-- Notification Channel -->
+    <string name="notification_channel_name">Camp IYF 2026</string>
+    <string name="notification_channel_desc">Notifications du Camp d\'Étude et de Formation IYF 2026</string>
+</resources>

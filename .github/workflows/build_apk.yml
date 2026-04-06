@@ -1,0 +1,150 @@
+name: 🏗️ Build IYF Camp 2026 APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Permet le déclenchement manuel depuis GitHub
+
+jobs:
+  build:
+    name: Build Debug APK
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Récupérer le code
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Configurer Java 17
+      - name: ☕ Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      # 3. Télécharger les polices Poppins
+      - name: 🔤 Download Poppins fonts
+        run: |
+          FONT_DIR="app/src/main/res/font"
+          mkdir -p "$FONT_DIR"
+
+          # Télécharger depuis Google Fonts API
+          curl -sL "https://fonts.gstatic.com/s/poppins/v21/pxiEyp8kv8JHgFVrJJfecg.woff2" -o /tmp/poppins_r.woff2 || true
+
+          # Méthode alternative: télécharger les TTF depuis GitHub
+          BASE_URL="https://github.com/google/fonts/raw/main/ofl/poppins"
+
+          curl -sL "$BASE_URL/Poppins-Regular.ttf" -o "$FONT_DIR/poppins_regular.ttf" || \
+            wget -q "https://github.com/google/fonts/raw/refs/heads/main/ofl/poppins/Poppins-Regular.ttf" -O "$FONT_DIR/poppins_regular.ttf"
+
+          curl -sL "$BASE_URL/Poppins-Medium.ttf" -o "$FONT_DIR/poppins_medium.ttf" || \
+            wget -q "https://github.com/google/fonts/raw/refs/heads/main/ofl/poppins/Poppins-Medium.ttf" -O "$FONT_DIR/poppins_medium.ttf"
+
+          curl -sL "$BASE_URL/Poppins-SemiBold.ttf" -o "$FONT_DIR/poppins_semibold.ttf" || \
+            wget -q "https://github.com/google/fonts/raw/refs/heads/main/ofl/poppins/Poppins-SemiBold.ttf" -O "$FONT_DIR/poppins_semibold.ttf"
+
+          curl -sL "$BASE_URL/Poppins-Bold.ttf" -o "$FONT_DIR/poppins_bold.ttf" || \
+            wget -q "https://github.com/google/fonts/raw/refs/heads/main/ofl/poppins/Poppins-Bold.ttf" -O "$FONT_DIR/poppins_bold.ttf"
+
+          # Supprimer le fichier XML placeholder
+          rm -f "$FONT_DIR/poppins_regular.xml"
+
+          # Vérifier les fichiers
+          ls -la "$FONT_DIR/"
+
+      # 4. Rendre gradlew exécutable
+      - name: 🔧 Grant Gradle permissions
+        run: chmod +x gradlew
+
+      # 5. Vérifier la configuration Gradle
+      - name: 📋 Check Gradle version
+        run: ./gradlew --version
+
+      # 6. Builder l'APK Debug
+      - name: 🔨 Build Debug APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      # 7. Uploader l'APK comme artifact (téléchargeable depuis GitHub)
+      - name: 📤 Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: IYFCamp2026-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+
+      # 8. Afficher les infos de l'APK
+      - name: ℹ️ APK Info
+        run: |
+          APK_PATH="app/build/outputs/apk/debug/app-debug.apk"
+          if [ -f "$APK_PATH" ]; then
+            echo "✅ APK généré avec succès !"
+            echo "📦 Taille: $(du -h $APK_PATH | cut -f1)"
+            echo "📍 Chemin: $APK_PATH"
+          else
+            echo "❌ APK non trouvé"
+            exit 1
+          fi
+
+  build-release:
+    name: Build Release APK & AAB
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: ☕ Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: 🔤 Download Poppins fonts
+        run: |
+          FONT_DIR="app/src/main/res/font"
+          mkdir -p "$FONT_DIR"
+          BASE_URL="https://github.com/google/fonts/raw/main/ofl/poppins"
+          curl -sL "$BASE_URL/Poppins-Regular.ttf" -o "$FONT_DIR/poppins_regular.ttf"
+          curl -sL "$BASE_URL/Poppins-Medium.ttf" -o "$FONT_DIR/poppins_medium.ttf"
+          curl -sL "$BASE_URL/Poppins-SemiBold.ttf" -o "$FONT_DIR/poppins_semibold.ttf"
+          curl -sL "$BASE_URL/Poppins-Bold.ttf" -o "$FONT_DIR/poppins_bold.ttf"
+          rm -f "$FONT_DIR/poppins_regular.xml"
+
+      - name: 🔑 Create Keystore
+        run: |
+          mkdir -p app/keystore
+          keytool -genkey -v \
+            -keystore app/keystore/iyf-camp-2026.jks \
+            -alias iyf-camp \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass iyf2026camp \
+            -keypass iyf2026camp \
+            -dname "CN=IYF Camp, OU=IYF, O=International Youth Fellowship, L=Abidjan, ST=CI, C=CI"
+
+      - name: 🔧 Grant Gradle permissions
+        run: chmod +x gradlew
+
+      - name: 📦 Build Release APK
+        run: ./gradlew assembleRelease --stacktrace
+
+      - name: 📦 Build Release AAB (Play Store)
+        run: ./gradlew bundleRelease --stacktrace
+
+      - name: 📤 Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: IYFCamp2026-release-apk
+          path: app/build/outputs/apk/release/app-release.apk
+          retention-days: 30
+
+      - name: 📤 Upload Release AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: IYFCamp2026-release-aab
+          path: app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30
